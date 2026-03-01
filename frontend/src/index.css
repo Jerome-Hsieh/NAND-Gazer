@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─── */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(16px) saturate(180%);
+  --glass-radius: 20px;
+  --glass-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --color-surface: #0a0a1a;
+}
+
+/* ─── Base ─── */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── App Background ─── */
+.app-background {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(56, 100, 220, 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(120, 60, 200, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 50% 80%, rgba(30, 180, 200, 0.10) 0%, transparent 70%);
+  color: #f5f5f7;
+  min-height: 100vh;
+}
+
+/* ─── Glass Card ─── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-glow), var(--glass-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    var(--glass-glow),
+    0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Glass Header ─── */
+.glass-header {
+  background: rgba(10, 10, 26, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Glass Input ─── */
+.glass-input {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #f5f5f7;
+  padding: 0.5rem 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.glass-input:focus {
+  border-color: rgba(100, 150, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(100, 150, 255, 0.15);
+}
+
+/* ─── Glass Button ─── */
+.glass-button {
+  background: rgba(60, 120, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(100, 150, 255, 0.25);
+  border-radius: 12px;
+  color: #f5f5f7;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.glass-button:hover {
+  background: rgba(60, 120, 255, 0.45);
+}
+
+.glass-button:active {
+  transform: scale(0.98);
+}
+
+/* ─── Pagination ─── */
+.glass-pagination {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.glass-pagination:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.glass-pagination:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.glass-pagination.active {
+  background: rgba(60, 120, 255, 0.35);
+  border-color: rgba(100, 150, 255, 0.3);
+  color: #f5f5f7;
+}
+
+/* ─── Scroll Reveal ─── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.scroll-reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scroll-reveal-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
+.scroll-reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.10s; }
+.scroll-reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.15s; }
+.scroll-reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.20s; }
+.scroll-reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.25s; }
+.scroll-reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.30s; }
+.scroll-reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.35s; }
+.scroll-reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.40s; }
+
+/* ─── Skeleton (Dark) ─── */
+.skeleton-dark {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--glass-radius);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Custom Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

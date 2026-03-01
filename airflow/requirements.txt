@@ -1,0 +1,4 @@
+httpx
+tenacity
+psycopg2-binary
+redis

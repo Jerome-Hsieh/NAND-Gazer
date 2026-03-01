@@ -1,0 +1,9 @@
+pytest
+pytest-asyncio
+pytest-timeout
+pytest-playwright
+playwright
+httpx
+psycopg2-binary
+redis
+tenacity

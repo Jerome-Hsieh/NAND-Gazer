@@ -1,0 +1,7 @@
+fastapi[standard]
+sqlalchemy[asyncio]
+asyncpg
+psycopg2-binary
+pydantic-settings
+redis
+uvicorn

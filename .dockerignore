@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+*.egg-info/
+.git/
+.DS_Store
+node_modules/
+frontend/dist/
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+dump.rdb
