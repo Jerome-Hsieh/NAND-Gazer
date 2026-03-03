@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getProducts, getProduct, getPriceHistory, getStats } from '../services/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getProducts, getProduct, getPriceHistory, getStats, postScrape } from '../services/api';
 
 export function useProducts(params: {
   search?: string;
@@ -35,5 +35,19 @@ export function useStats() {
     queryKey: ['stats'],
     queryFn: getStats,
     refetchInterval: 60_000,
+  });
+}
+
+export function useScrape() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: postScrape,
+    onSuccess: () => {
+      // Background scrape takes ~10-20s; refresh data after a delay
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['products'] });
+        queryClient.invalidateQueries({ queryKey: ['stats'] });
+      }, 15_000);
+    },
   });
 }

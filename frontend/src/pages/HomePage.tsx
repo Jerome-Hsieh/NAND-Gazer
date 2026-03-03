@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useStats, useProducts } from '../hooks/useProducts';
+import { useState } from 'react';
+import { useStats, useProducts, useScrape } from '../hooks/useProducts';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import StatsCard from '../components/StatsCard';
 import ProductCard from '../components/ProductCard';
@@ -12,6 +13,10 @@ export default function HomePage() {
     sort_by: 'updated_at',
     order: 'desc',
   });
+
+  const scrape = useScrape();
+  const [scrapeError, setScrapeError] = useState<string | null>(null);
+  const [scrapeStarted, setScrapeStarted] = useState(false);
 
   const statsRef = useScrollReveal<HTMLDivElement>();
   const productsRef = useScrollReveal<HTMLDivElement>();
@@ -53,7 +58,50 @@ export default function HomePage() {
       {/* Recent Products */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-white">Recently Updated</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-white">Recently Updated</h2>
+            <button
+              onClick={() => {
+                setScrapeError(null);
+                setScrapeStarted(false);
+                scrape.mutate(undefined, {
+                  onSuccess: () => {
+                    setScrapeStarted(true);
+                    setTimeout(() => setScrapeStarted(false), 20000);
+                  },
+                  onError: (err) => {
+                    setScrapeError(err instanceof Error ? err.message : 'Scrape failed');
+                    setTimeout(() => setScrapeError(null), 5000);
+                  },
+                });
+              }}
+              disabled={scrape.isPending || scrapeStarted}
+              className="px-3 py-1 text-xs font-medium rounded-md bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
+            >
+              {scrape.isPending ? (
+                <span className="flex items-center gap-1">
+                  <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Sending…
+                </span>
+              ) : scrapeStarted ? (
+                <span className="flex items-center gap-1">
+                  <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Updating…
+                </span>
+              ) : (
+                'Update Now'
+              )}
+            </button>
+            {scrapeError && (
+              <span className="text-xs text-red-400">{scrapeError}</span>
+            )}
+          </div>
           <Link to="/search" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
             View all →
           </Link>
