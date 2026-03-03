@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getProducts, getProduct, getPriceHistory, getStats, postScrape } from '../services/api';
+import { useQuery } from '@tanstack/react-query';
+import { getProducts, getProduct, getPriceHistory, getStats } from '../services/api';
 
 export function useProducts(params: {
   search?: string;
@@ -35,16 +35,5 @@ export function useStats() {
     queryKey: ['stats'],
     queryFn: getStats,
     refetchInterval: 60_000,
-  });
-}
-
-export function useScrape() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: postScrape,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      queryClient.invalidateQueries({ queryKey: ['stats'] });
-    },
   });
 }
