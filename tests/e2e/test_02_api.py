@@ -135,8 +135,8 @@ class TestStatsEndpoint:
 
 
 class TestScrapeEndpoint:
-    def test_scrape_returns_results(self, api_client):
-        """POST /api/v1/scrape returns 200 with expected fields."""
+    def test_scrape_returns_accepted(self, api_client):
+        """POST /api/v1/scrape returns 200 with expected fields (background scrape)."""
         resp = api_client.post("/api/v1/scrape")
         assert resp.status_code == 200
         data = resp.json()
@@ -145,10 +145,13 @@ class TestScrapeEndpoint:
         assert "prices_recorded" in data
         assert "message" in data
         assert data["keywords_scraped"] >= 1
-        assert data["products_found"] > 0
+        # products_found is 0 in the immediate response (work happens in background)
+        assert data["products_found"] == 0
 
     def test_scrape_updates_prices(self, api_client, db_conn):
-        """Verify price_history count increases after scrape."""
+        """Verify price_history count increases after background scrape completes."""
+        import time
+
         cur = db_conn.cursor()
         cur.execute("SELECT COUNT(*) FROM price_history")
         count_before = cur.fetchone()[0]
@@ -156,6 +159,14 @@ class TestScrapeEndpoint:
         resp = api_client.post("/api/v1/scrape")
         assert resp.status_code == 200
 
-        cur.execute("SELECT COUNT(*) FROM price_history")
-        count_after = cur.fetchone()[0]
-        assert count_after > count_before
+        # Wait for background task to complete
+        for _ in range(30):
+            time.sleep(1)
+            cur.execute("SELECT COUNT(*) FROM price_history")
+            count_after = cur.fetchone()[0]
+            if count_after > count_before:
+                break
+
+        assert count_after > count_before, (
+            f"price_history count did not increase after 30s: before={count_before}, after={count_after}"
+        )
