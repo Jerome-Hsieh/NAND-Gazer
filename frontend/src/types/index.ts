@@ -36,13 +36,6 @@ export interface PricePoint {
   scraped_at: string;
 }
 
-export interface ScrapeResult {
-  keywords_scraped: number;
-  products_found: number;
-  prices_recorded: number;
-  message: string;
-}
-
 export interface Stats {
   total_products: number;
   total_shops: number;
