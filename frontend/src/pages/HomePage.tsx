@@ -35,7 +35,11 @@ export default function HomePage() {
         ) : stats ? (
           <>
             <StatsCard title="Products Tracked" value={stats.total_products} />
-            <StatsCard title="Active Keywords" value={stats.active_keywords} />
+            <StatsCard
+              title="Tracking Keywords"
+              value={stats.active_keywords}
+              subtitle={stats.keyword_names.length > 0 ? stats.keyword_names.join(', ') : undefined}
+            />
             <StatsCard title="Price Records" value={stats.total_price_records.toLocaleString()} />
             <StatsCard
               title="Last Scrape"

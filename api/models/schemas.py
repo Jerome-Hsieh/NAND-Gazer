@@ -51,6 +51,7 @@ class StatsResponse(BaseModel):
     total_shops: int = 0
     total_price_records: int = 0
     active_keywords: int = 0
+    keyword_names: list[str] = []
     prices_last_24h: int = 0
     last_scrape_at: Optional[datetime] = None
 

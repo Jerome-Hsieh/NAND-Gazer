@@ -41,6 +41,7 @@ export interface Stats {
   total_shops: number;
   total_price_records: number;
   active_keywords: number;
+  keyword_names: string[];
   prices_last_24h: number;
   last_scrape_at: string | null;
 }

@@ -118,6 +118,9 @@ class TestStatsEndpoint:
         assert data["total_shops"] >= 1
         assert data["total_price_records"] >= 1000
         assert data["active_keywords"] >= 2
+        assert "keyword_names" in data
+        assert isinstance(data["keyword_names"], list)
+        assert len(data["keyword_names"]) >= 2
 
     def test_stats_matches_db(self, api_client, db_conn):
         """Stats total_products matches DB count of active products."""

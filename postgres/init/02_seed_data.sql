@@ -5,18 +5,18 @@ INSERT INTO shops (platform, shop_id, name) VALUES
     ('pchome', 1, 'PChome 24h')
 ON CONFLICT (platform, shop_id) DO NOTHING;
 
--- 10 real PChome memory products
+-- 10 real PChome products
 INSERT INTO products (platform, item_id, shop_id, name, url, category, brand) VALUES
-    ('pchome', 'DYAZ53-A900HUJSE', 1, 'Kingston FURY Beast DDR5 5600 32GB(16GBx2) 桌上型超頻記憶體', 'https://24h.pchome.com.tw/prod/DYAZ53-A900HUJSE', 'DRAM', 'Kingston'),
-    ('pchome', 'DYAZ55-A900JM3PK', 1, 'Corsair Vengeance DDR5 6000 32GB(16GBx2) AMD EXPO 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ55-A900JM3PK', 'DRAM', 'Corsair'),
-    ('pchome', 'DYAZ4W-A900G5RJ8', 1, 'G.SKILL Trident Z5 RGB DDR5 6400 32GB(16GBx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ4W-A900G5RJ8', 'DRAM', 'G.SKILL'),
-    ('pchome', 'DYAZ52-A900AVKQ3', 1, 'Kingston FURY Beast DDR5 5200 16GB 桌上型超頻記憶體', 'https://24h.pchome.com.tw/prod/DYAZ52-A900AVKQ3', 'DRAM', 'Kingston'),
-    ('pchome', 'DYAZ2D-A900BR6TC', 1, 'Crucial DDR5 4800 16GB 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ2D-A900BR6TC', 'DRAM', 'Crucial'),
-    ('pchome', 'DYAZ50-A900FD7AU', 1, 'ADATA XPG Lancer DDR5 5600 32GB(16GBx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ50-A900FD7AU', 'DRAM', 'ADATA'),
-    ('pchome', 'DYAZ3J-A900E4TYN', 1, 'Kingston DDR4 3200 16GB 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ3J-A900E4TYN', 'DRAM', 'Kingston'),
-    ('pchome', 'DYAZ3L-A900F8PQ2', 1, 'Corsair Vengeance LPX DDR4 3200 32GB(16GBx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ3L-A900F8PQ2', 'DRAM', 'Corsair'),
-    ('pchome', 'DYAZ2K-A900CRK9H', 1, 'G.SKILL Ripjaws V DDR4 3200 32GB(16GBx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ2K-A900CRK9H', 'DRAM', 'G.SKILL'),
-    ('pchome', 'DYAZ4S-A900GQZW5', 1, 'Team T-Force Delta RGB DDR5 6000 32GB(16GBx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DYAZ4S-A900GQZW5', 'DRAM', 'Team')
+    ('pchome', 'DRACB8-A900G5P4K', 1, 'Kingston FURY Beast DDR5 5600 32GB(16GBx2) RGB 桌上型超頻記憶體', 'https://24h.pchome.com.tw/prod/DRACB8-A900G5P4K', 'DRAM', 'Kingston'),
+    ('pchome', 'DRAC47-A900HB8VJ', 1, 'UMAX DDR5 5600 32GB(16Gx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DRAC47-A900HB8VJ', 'DRAM', 'UMAX'),
+    ('pchome', 'DRAC4S-A900G14KE', 1, 'ADATA XPG Lancer DDR5 6000 64GB(32Gx2) RGB 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DRAC4S-A900G14KE', 'DRAM', 'ADATA'),
+    ('pchome', 'DRAC00-A900GGICG', 1, 'Micron Crucial DDR5 5600 16GB 筆記型記憶體', 'https://24h.pchome.com.tw/prod/DRAC00-A900GGICG', 'DRAM', 'Crucial'),
+    ('pchome', 'DRAC5Z-A900HBGFM', 1, 'Samsung DDR5 5600 64GB ECC R-DIMM 伺服器記憶體', 'https://24h.pchome.com.tw/prod/DRAC5Z-A900HBGFM', 'DRAM', 'Samsung'),
+    ('pchome', 'DRAC10-A900BJEIW', 1, 'PChome DDR5 記憶體商品', 'https://24h.pchome.com.tw/prod/DRAC10-A900BJEIW', 'DRAM', 'PChome'),
+    ('pchome', 'DSAJHJ-A900J0F5H', 1, 'GIGABYTE B860M GAMING WIFI6 主機板 + DDR5 記憶體組合', 'https://24h.pchome.com.tw/prod/DSAJHJ-A900J0F5H', 'COMBO', 'GIGABYTE'),
+    ('pchome', 'DHAI6O-A900HDPKP', 1, 'DELL Latitude 3550 商用筆電', 'https://24h.pchome.com.tw/prod/DHAI6O-A900HDPKP', 'LAPTOP', 'DELL'),
+    ('pchome', 'DRAC5Z-A900B15AU', 1, 'V-Color DDR4 3200 128GB ECC R-DIMM 伺服器記憶體', 'https://24h.pchome.com.tw/prod/DRAC5Z-A900B15AU', 'DRAM', 'V-Color'),
+    ('pchome', 'DSAM9M-A900IE4BA', 1, 'ASUS PN53 AMD Ryzen 5 迷你電腦', 'https://24h.pchome.com.tw/prod/DSAM9M-A900IE4BA', 'MINI-PC', 'ASUS')
 ON CONFLICT (platform, item_id) DO NOTHING;
 
 -- Price history: simulate 30 days of price data for each product

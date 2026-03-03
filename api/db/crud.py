@@ -103,4 +103,10 @@ async def get_stats(db: AsyncSession) -> dict:
     """)
     result = await db.execute(query)
     row = result.mappings().first()
-    return dict(row) if row else {}
+    stats = dict(row) if row else {}
+
+    kw_query = text("SELECT keyword FROM tracked_keywords WHERE is_active = TRUE ORDER BY keyword")
+    kw_result = await db.execute(kw_query)
+    stats["keyword_names"] = [r[0] for r in kw_result.fetchall()]
+
+    return stats

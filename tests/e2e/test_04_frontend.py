@@ -70,7 +70,7 @@ class TestHomePage:
         # Wait for stats to load
         page.wait_for_selector("text=Products Tracked", timeout=10000)
 
-        for title in ["Products Tracked", "Active Keywords", "Price Records", "Last Scrape"]:
+        for title in ["Products Tracked", "Tracking Keywords", "Price Records", "Last Scrape"]:
             card = page.locator("div", has_text=title).first
             expect(card).to_be_visible()
 
@@ -189,10 +189,11 @@ class TestProductDetailPage:
         page.wait_for_selector("h1", timeout=10000)
 
         # Labels are conditionally rendered based on product data.
-        # brand is often null for scraped products, so at least 1 of these should be visible.
+        # Scroll down to ensure detail grid is in viewport, then wait for it.
+        page.locator(".grid.grid-cols-2.gap-4").first.scroll_into_view_if_needed()
         labels_found = 0
         for label in ["Shop:", "Brand:", "Platform:"]:
-            if page.locator(f"text={label}").count() > 0:
+            if page.get_by_text(label).count() > 0:
                 labels_found += 1
         assert labels_found >= 1, "Expected at least 1 of Shop/Brand/Platform labels"
 
