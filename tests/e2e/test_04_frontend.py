@@ -278,12 +278,14 @@ class TestUpdateButton:
         expect(btn).to_be_visible()
 
     def test_update_button_triggers_scrape(self, page: Page):
-        """Clicking 'Update Now' triggers scrape and shows updating state."""
+        """Clicking 'Update Now' triggers scrape and refreshes products."""
         page.goto(FRONTEND_URL)
         page.wait_for_selector("a[href^='/product/']", timeout=10000)
         btn = page.locator("button", has_text="Update Now")
         btn.click()
-        # Button should show updating state after the immediate API response
+        # Button should show loading state
         expect(page.get_by_text("Updating…")).to_be_visible(timeout=5000)
-        # Products should still be visible while background scrape runs
+        # Wait for completion — button text returns to "Update Now"
+        expect(btn).to_be_visible(timeout=120000)
+        # Products should still be visible after refresh
         page.wait_for_selector("a[href^='/product/']", timeout=10000)

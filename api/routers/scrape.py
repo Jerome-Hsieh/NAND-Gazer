@@ -5,11 +5,11 @@ import logging
 import sys
 from pathlib import Path
 
-from fastapi import APIRouter, BackgroundTasks, Depends
+from fastapi import APIRouter, Depends
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.db.database import async_session, get_db
+from api.db.database import get_db
 from api.cache.redis_client import get_redis
 from api.models.schemas import ScrapeResponse
 
@@ -63,107 +63,9 @@ def _run_scrape(keywords: list[dict]) -> list[dict]:
     return all_products
 
 
-async def _scrape_background(keywords: list[dict]) -> None:
-    """Background task: scrape PChome, upsert DB, refresh MV, invalidate cache."""
-    try:
-        # 1. Run sync scraping in a thread executor
-        loop = asyncio.get_event_loop()
-        all_products = await loop.run_in_executor(None, _run_scrape, keywords)
-
-        if not all_products:
-            logger.warning("Background scrape produced no products")
-            return
-
-        # 2. DB operations in a fresh session
-        async with async_session() as db:
-            # Ensure PChome shop exists
-            shop_result = await db.execute(
-                text(
-                    """
-                    INSERT INTO shops (platform, shop_id, name)
-                    VALUES ('pchome', 1, 'PChome 24h')
-                    ON CONFLICT (platform, shop_id) DO UPDATE SET updated_at = NOW()
-                    RETURNING id
-                    """
-                )
-            )
-            db_shop_id = shop_result.scalar_one()
-
-            # Upsert products and insert prices
-            products_found = 0
-            prices_recorded = 0
-
-            for p in all_products:
-                prod_result = await db.execute(
-                    text(
-                        """
-                        INSERT INTO products (platform, item_id, shop_id, name, url, category, brand)
-                        VALUES ('pchome', :item_id, :shop_id, :name, :url, :category, :brand)
-                        ON CONFLICT (platform, item_id) DO UPDATE SET
-                            name = EXCLUDED.name,
-                            url = EXCLUDED.url,
-                            category = COALESCE(EXCLUDED.category, products.category),
-                            brand = COALESCE(EXCLUDED.brand, products.brand),
-                            updated_at = NOW()
-                        RETURNING id
-                        """
-                    ),
-                    {
-                        "item_id": p["item_id"],
-                        "shop_id": db_shop_id,
-                        "name": p["name"],
-                        "url": p["url"],
-                        "category": p.get("category"),
-                        "brand": p.get("brand"),
-                    },
-                )
-                db_product_id = prod_result.scalar_one()
-                products_found += 1
-
-                await db.execute(
-                    text(
-                        """
-                        INSERT INTO price_history (product_id, price, original_price, discount_percent)
-                        VALUES (:product_id, :price, :original_price, :discount_percent)
-                        """
-                    ),
-                    {
-                        "product_id": db_product_id,
-                        "price": p["price"],
-                        "original_price": p.get("original_price"),
-                        "discount_percent": p.get("discount_percent"),
-                    },
-                )
-                prices_recorded += 1
-
-            # Refresh materialized view
-            await db.execute(text("REFRESH MATERIALIZED VIEW CONCURRENTLY mv_latest_prices"))
-            await db.commit()
-
-        logger.info("Background scrape done: %d products, %d prices", products_found, prices_recorded)
-
-        # 3. Invalidate Redis cache
-        try:
-            r = await get_redis()
-            keys = []
-            async for key in r.scan_iter(match="pricetracker:*"):
-                keys.append(key)
-            if keys:
-                await r.delete(*keys)
-                logger.info("Cleared %d cache keys", len(keys))
-        except Exception:
-            logger.warning("Failed to invalidate cache", exc_info=True)
-
-    except Exception:
-        logger.exception("Background scrape failed")
-
-
 @router.post("", response_model=ScrapeResponse)
-async def trigger_scrape(
-    background_tasks: BackgroundTasks,
-    db: AsyncSession = Depends(get_db),
-):
-    # Fetch active keywords (fast DB query — done inline)
+async def trigger_scrape(db: AsyncSession = Depends(get_db)):
+    # 1. Fetch active keywords
     result = await db.execute(
         text("SELECT id, keyword, max_pages FROM tracked_keywords WHERE is_active = TRUE")
     )
@@ -177,12 +79,89 @@ async def trigger_scrape(
             message="No active keywords configured",
         )
 
-    # Kick off scraping in the background and return immediately
-    background_tasks.add_task(_scrape_background, keywords)
+    # 2. Run sync scraping in a thread executor
+    loop = asyncio.get_event_loop()
+    all_products = await loop.run_in_executor(None, _run_scrape, keywords)
+
+    # 3. Ensure PChome shop exists
+    shop_result = await db.execute(
+        text(
+            """
+            INSERT INTO shops (platform, shop_id, name)
+            VALUES ('pchome', 1, 'PChome 24h')
+            ON CONFLICT (platform, shop_id) DO UPDATE SET updated_at = NOW()
+            RETURNING id
+            """
+        )
+    )
+    db_shop_id = shop_result.scalar_one()
+
+    # 4. Upsert products and insert prices
+    products_found = 0
+    prices_recorded = 0
+
+    for p in all_products:
+        prod_result = await db.execute(
+            text(
+                """
+                INSERT INTO products (platform, item_id, shop_id, name, url, category, brand)
+                VALUES ('pchome', :item_id, :shop_id, :name, :url, :category, :brand)
+                ON CONFLICT (platform, item_id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    url = EXCLUDED.url,
+                    category = COALESCE(EXCLUDED.category, products.category),
+                    brand = COALESCE(EXCLUDED.brand, products.brand),
+                    updated_at = NOW()
+                RETURNING id
+                """
+            ),
+            {
+                "item_id": p["item_id"],
+                "shop_id": db_shop_id,
+                "name": p["name"],
+                "url": p["url"],
+                "category": p.get("category"),
+                "brand": p.get("brand"),
+            },
+        )
+        db_product_id = prod_result.scalar_one()
+        products_found += 1
+
+        await db.execute(
+            text(
+                """
+                INSERT INTO price_history (product_id, price, original_price, discount_percent)
+                VALUES (:product_id, :price, :original_price, :discount_percent)
+                """
+            ),
+            {
+                "product_id": db_product_id,
+                "price": p["price"],
+                "original_price": p.get("original_price"),
+                "discount_percent": p.get("discount_percent"),
+            },
+        )
+        prices_recorded += 1
+
+    # 5. Refresh materialized view
+    await db.execute(text("REFRESH MATERIALIZED VIEW CONCURRENTLY mv_latest_prices"))
+    await db.commit()
+
+    # 6. Invalidate Redis cache
+    try:
+        r = await get_redis()
+        keys = []
+        async for key in r.scan_iter(match="pricetracker:*"):
+            keys.append(key)
+        if keys:
+            await r.delete(*keys)
+            logger.info("Cleared %d cache keys", len(keys))
+    except Exception:
+        logger.warning("Failed to invalidate cache", exc_info=True)
 
     return ScrapeResponse(
         keywords_scraped=len(keywords),
-        products_found=0,
-        prices_recorded=0,
-        message=f"Scrape started for {len(keywords)} keywords",
+        products_found=products_found,
+        prices_recorded=prices_recorded,
+        message=f"Scraped {len(keywords)} keywords, found {products_found} products",
     )

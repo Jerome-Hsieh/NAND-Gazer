@@ -43,11 +43,8 @@ export function useScrape() {
   return useMutation({
     mutationFn: postScrape,
     onSuccess: () => {
-      // Background scrape takes ~10-20s; refresh data after a delay
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['products'] });
-        queryClient.invalidateQueries({ queryKey: ['stats'] });
-      }, 15_000);
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['stats'] });
     },
   });
 }
