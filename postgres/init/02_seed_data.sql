@@ -5,28 +5,29 @@ INSERT INTO shops (platform, shop_id, name) VALUES
     ('pchome', 1, 'PChome 24h')
 ON CONFLICT (platform, shop_id) DO NOTHING;
 
--- 10 real PChome products
+-- 10 real PChome products (prices fetched from PChome API 2026-03-03)
 INSERT INTO products (platform, item_id, shop_id, name, url, category, brand) VALUES
-    ('pchome', 'DRACB8-A900G5P4K', 1, 'Kingston FURY Beast DDR5 5600 32GB(16GBx2) RGB 桌上型超頻記憶體', 'https://24h.pchome.com.tw/prod/DRACB8-A900G5P4K', 'DRAM', 'Kingston'),
-    ('pchome', 'DRAC47-A900HB8VJ', 1, 'UMAX DDR5 5600 32GB(16Gx2) 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DRAC47-A900HB8VJ', 'DRAM', 'UMAX'),
-    ('pchome', 'DRAC4S-A900G14KE', 1, 'ADATA XPG Lancer DDR5 6000 64GB(32Gx2) RGB 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DRAC4S-A900G14KE', 'DRAM', 'ADATA'),
-    ('pchome', 'DRAC00-A900GGICG', 1, 'Micron Crucial DDR5 5600 16GB 筆記型記憶體', 'https://24h.pchome.com.tw/prod/DRAC00-A900GGICG', 'DRAM', 'Crucial'),
-    ('pchome', 'DRAC5Z-A900HBGFM', 1, 'Samsung DDR5 5600 64GB ECC R-DIMM 伺服器記憶體', 'https://24h.pchome.com.tw/prod/DRAC5Z-A900HBGFM', 'DRAM', 'Samsung'),
-    ('pchome', 'DRAC10-A900BJEIW', 1, 'PChome DDR5 記憶體商品', 'https://24h.pchome.com.tw/prod/DRAC10-A900BJEIW', 'DRAM', 'PChome'),
-    ('pchome', 'DSAJHJ-A900J0F5H', 1, 'GIGABYTE B860M GAMING WIFI6 主機板 + DDR5 記憶體組合', 'https://24h.pchome.com.tw/prod/DSAJHJ-A900J0F5H', 'COMBO', 'GIGABYTE'),
-    ('pchome', 'DHAI6O-A900HDPKP', 1, 'DELL Latitude 3550 商用筆電', 'https://24h.pchome.com.tw/prod/DHAI6O-A900HDPKP', 'LAPTOP', 'DELL'),
-    ('pchome', 'DRAC5Z-A900B15AU', 1, 'V-Color DDR4 3200 128GB ECC R-DIMM 伺服器記憶體', 'https://24h.pchome.com.tw/prod/DRAC5Z-A900B15AU', 'DRAM', 'V-Color'),
-    ('pchome', 'DSAM9M-A900IE4BA', 1, 'ASUS PN53 AMD Ryzen 5 迷你電腦', 'https://24h.pchome.com.tw/prod/DSAM9M-A900IE4BA', 'MINI-PC', 'ASUS')
+    ('pchome', 'DRAC47-A900I6WWE', 1, 'UMAX DDR5 4800 32G 筆記型記憶體', 'https://24h.pchome.com.tw/prod/DRAC47-A900I6WWE', 'DRAM', 'UMAX'),
+    ('pchome', 'DRAC47-A900I6WU6', 1, 'UMAX DDR5 4800 16G 筆記型記憶體', 'https://24h.pchome.com.tw/prod/DRAC47-A900I6WU6', 'DRAM', 'UMAX'),
+    ('pchome', 'DSBC3V-A900G91GU', 1, 'ADATA 威剛 DDR5-5600 32G 筆記型記憶體', 'https://24h.pchome.com.tw/prod/DSBC3V-A900G91GU', 'DRAM', 'ADATA'),
+    ('pchome', 'DRAC8Z-A900G73JT', 1, 'KLEVV 科賦 DDR5 5600 16G 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DRAC8Z-A900G73JT', 'DRAM', 'KLEVV'),
+    ('pchome', 'DRAC8Z-A900HIELY', 1, 'KLEVV 科賦 DDR5 5600 32G 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DRAC8Z-A900HIELY', 'DRAM', 'KLEVV'),
+    ('pchome', 'DSAJD1-A900J7IN7', 1, 'GIGABYTE 技嘉 B760M E DDR5 主機板+威剛 DDR5 5600 16G 記憶體', 'https://24h.pchome.com.tw/prod/DSAJD1-A900J7IN7', 'DRAM', 'GIGABYTE'),
+    ('pchome', 'DSBC3V-A900G91FR', 1, 'ADATA 威剛 DDR5-5600 32G 桌上型記憶體', 'https://24h.pchome.com.tw/prod/DSBC3V-A900G91FR', 'DRAM', 'ADATA'),
+    ('pchome', 'DRAC47-A900GIHJ6', 1, 'UMAX DDR5 4800 32GB 桌上型記憶體(2048X8)', 'https://24h.pchome.com.tw/prod/DRAC47-A900GIHJ6', 'DRAM', 'UMAX'),
+    ('pchome', 'DRACDB-A900HRBI3', 1, 'ACER 宏碁 SD200 DDR5 5600 16GB 筆電記憶體', 'https://24h.pchome.com.tw/prod/DRACDB-A900HRBI3', 'DRAM', 'ACER'),
+    ('pchome', 'DCBE27-A900HPB4R', 1, 'Micron 美光 Crucial DDR5 5600 16G 筆電記憶體', 'https://24h.pchome.com.tw/prod/DCBE27-A900HPB4R', 'DRAM', 'Micron')
 ON CONFLICT (platform, item_id) DO NOTHING;
 
 -- Price history: simulate 30 days of price data for each product
+-- Base prices from real PChome API (2026-03-03)
 -- Generate multiple price points per product with realistic fluctuations
 
 DO $$
 DECLARE
     prod RECORD;
-    base_prices NUMERIC[] := ARRAY[3290, 3490, 4590, 1890, 1490, 2990, 1290, 2490, 2290, 3190];
-    orig_prices NUMERIC[] := ARRAY[3690, 3990, 5290, 2190, 1690, 3490, 1490, 2890, 2690, 3590];
+    base_prices NUMERIC[] := ARRAY[10519, 5599, 10499, 5158, 10088, 7990, 10499, 10499, 5199, 5999];
+    orig_prices NUMERIC[] := ARRAY[10819, 5899, 10499, 5458, 10388, 7990, 10499, 10799, 5499, 5999];
     i INTEGER;
     j INTEGER;
     day_offset INTEGER;
