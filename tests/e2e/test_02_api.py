@@ -132,3 +132,30 @@ class TestStatsEndpoint:
         db_total = cur.fetchone()[0]
 
         assert api_total == db_total
+
+
+class TestScrapeEndpoint:
+    def test_scrape_returns_results(self, api_client):
+        """POST /api/v1/scrape returns 200 with expected fields."""
+        resp = api_client.post("/api/v1/scrape")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "keywords_scraped" in data
+        assert "products_found" in data
+        assert "prices_recorded" in data
+        assert "message" in data
+        assert data["keywords_scraped"] >= 1
+        assert data["products_found"] > 0
+
+    def test_scrape_updates_prices(self, api_client, db_conn):
+        """Verify price_history count increases after scrape."""
+        cur = db_conn.cursor()
+        cur.execute("SELECT COUNT(*) FROM price_history")
+        count_before = cur.fetchone()[0]
+
+        resp = api_client.post("/api/v1/scrape")
+        assert resp.status_code == 200
+
+        cur.execute("SELECT COUNT(*) FROM price_history")
+        count_after = cur.fetchone()[0]
+        assert count_after > count_before

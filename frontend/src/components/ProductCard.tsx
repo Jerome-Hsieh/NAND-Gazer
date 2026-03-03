@@ -19,11 +19,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         </h3>
         <div className="mt-2 flex items-baseline gap-2">
           <span className="text-lg font-bold text-red-600">
-            ${product.price?.toLocaleString() ?? '—'}
+            NT${product.price?.toLocaleString() ?? '—'}
           </span>
           {product.original_price && product.original_price > (product.price ?? 0) && (
             <span className="text-sm text-white/30 line-through">
-              ${product.original_price.toLocaleString()}
+              NT${product.original_price.toLocaleString()}
             </span>
           )}
           {hasDiscount && (

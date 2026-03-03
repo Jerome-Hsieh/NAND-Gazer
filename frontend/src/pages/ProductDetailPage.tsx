@@ -44,11 +44,11 @@ export default function ProductDetailPage() {
 
         <div className="flex items-baseline gap-3">
           <span className="text-3xl font-bold text-red-600">
-            ${product.price?.toLocaleString() ?? '—'}
+            NT${product.price?.toLocaleString() ?? '—'}
           </span>
           {product.original_price && product.original_price > (product.price ?? 0) && (
             <span className="text-lg text-white/30 line-through">
-              ${product.original_price.toLocaleString()}
+              NT${product.original_price.toLocaleString()}
             </span>
           )}
           {product.discount_percent && product.discount_percent > 0 && (
