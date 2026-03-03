@@ -1,4 +1,4 @@
-import type { PaginatedProducts, ProductDetail, PricePoint, Stats, ScrapeResult } from '../types';
+import type { PaginatedProducts, ProductDetail, PricePoint, Stats } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
 
@@ -34,10 +34,4 @@ export function getPriceHistory(id: number, days = 30): Promise<PricePoint[]> {
 
 export function getStats(): Promise<Stats> {
   return fetchJson(`${API_BASE}/stats`);
-}
-
-export async function postScrape(): Promise<ScrapeResult> {
-  const res = await fetch(`${API_BASE}/scrape`, { method: 'POST' });
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return res.json();
 }
