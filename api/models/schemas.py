@@ -56,6 +56,13 @@ class StatsResponse(BaseModel):
     last_scrape_at: Optional[datetime] = None
 
 
+class ScrapeResponse(BaseModel):
+    keywords_scraped: int
+    products_found: int
+    prices_recorded: int
+    message: str
+
+
 class HealthResponse(BaseModel):
     status: str = "ok"
     version: str = "1.0.0"

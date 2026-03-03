@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.models.schemas import HealthResponse
-from api.routers import products, prices, stats
+from api.routers import products, prices, stats, scrape
 
 
 @asynccontextmanager
@@ -30,6 +30,7 @@ app.add_middleware(
 app.include_router(products.router, prefix="/api/v1")
 app.include_router(prices.router, prefix="/api/v1")
 app.include_router(stats.router, prefix="/api/v1")
+app.include_router(scrape.router, prefix="/api/v1")
 
 
 @app.get("/api/v1/health", response_model=HealthResponse)
